@@ -317,7 +317,7 @@ console.log('%cBuilt with ❤️ by a 2nd Year CSE Student @ Anna University', '
     waves.push({
       amplitude: 15 + Math.random() * 20,
       frequency: 0.005 + Math.random() * 0.008,
-      speed: 0.008 + Math.random() * 0.012,
+      speed: 0.002 + Math.random() * 0.004,
       phase: Math.random() * Math.PI * 2,
       y: height * (0.4 + i * 0.15),
       color: i % 2 === 0
