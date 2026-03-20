@@ -297,6 +297,131 @@ console.log('%c👋 Hey there, fellow dev! 🚀', 'color: #a855f7; font-size: 1.
 console.log('%cBuilt with ❤️ by a 2nd Year CSE Student @ Anna University', 'color: #22d3ee; font-size: 0.9rem;');
 
 
+/* ─── 10b. WATER CANVAS ANIMATION ─── */
+(function initWaterCanvas() {
+  const canvas = document.getElementById('waterCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  const waves = [];
+
+  function resize() {
+    width = canvas.width = canvas.parentElement.offsetWidth;
+    height = canvas.height = canvas.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Create wave layers
+  for (let i = 0; i < 4; i++) {
+    waves.push({
+      amplitude: 15 + Math.random() * 20,
+      frequency: 0.005 + Math.random() * 0.008,
+      speed: 0.008 + Math.random() * 0.012,
+      phase: Math.random() * Math.PI * 2,
+      y: height * (0.4 + i * 0.15),
+      color: i % 2 === 0
+        ? 'rgba(124, 58, 237, 0.08)'
+        : 'rgba(34, 211, 238, 0.06)',
+    });
+  }
+
+  function drawWaves(time) {
+    ctx.clearRect(0, 0, width, height);
+    waves.forEach(w => {
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      for (let x = 0; x <= width; x += 3) {
+        const y = w.y +
+          Math.sin(x * w.frequency + time * w.speed + w.phase) * w.amplitude +
+          Math.sin(x * w.frequency * 0.5 + time * w.speed * 1.3) * (w.amplitude * 0.4);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fillStyle = w.color;
+      ctx.fill();
+    });
+  }
+
+  let animFrame;
+  function animate(time) {
+    drawWaves(time);
+    animFrame = requestAnimationFrame(animate);
+  }
+  animFrame = requestAnimationFrame(animate);
+})();
+
+
+/* ─── 10c. CLICK WATER DROP RIPPLE EFFECT ─── */
+(function initClickRipple() {
+  const container = document.getElementById('rippleContainer');
+  if (!container) return;
+
+  document.addEventListener('click', (e) => {
+    const drop = document.createElement('div');
+    drop.className = 'water-drop';
+    drop.style.cssText = `
+      left: ${e.clientX}px;
+      top: ${e.clientY}px;
+      width: 60px;
+      height: 60px;
+    `;
+
+    // Three ripple rings
+    for (let i = 0; i < 3; i++) {
+      const ring = document.createElement('div');
+      ring.className = 'water-drop-ring';
+      drop.appendChild(ring);
+    }
+
+    // Center splash dot
+    const center = document.createElement('div');
+    center.className = 'water-drop-center';
+    drop.appendChild(center);
+
+    container.appendChild(drop);
+
+    // Cleanup after animation
+    setTimeout(() => drop.remove(), 1300);
+  });
+})();
+
+
+/* ─── 10d. MOUSE FOLLOWER GLOW ─── */
+(function initCursorGlow() {
+  const glow = document.createElement('div');
+  glow.style.cssText = `
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(-50%, -50%);
+    transition: left 0.3s ease, top 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+  `;
+  document.body.appendChild(glow);
+
+  let visible = false;
+  document.addEventListener('mousemove', (e) => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+    if (!visible) {
+      glow.style.opacity = '1';
+      visible = true;
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    glow.style.opacity = '0';
+    visible = false;
+  });
+})();
+
+
 /* ════════════════════════════════════════════════════════════════
    11. PROJECT MODAL SYSTEM
    ════════════════════════════════════════════════════════════════ */
